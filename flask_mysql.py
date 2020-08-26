@@ -8,6 +8,7 @@ from statistics import mean
 from flask_cors import CORS, cross_origin
 from flask import jsonify
 
+
 app = Flask("__name__")
 cors = CORS(app)
 # app.config['CORS_HEADERS'] = 'Content-Type'
@@ -26,6 +27,7 @@ def input_data():
     lembap = 0.0
     sm = 0.0
     rel = 0
+# perintah arduino
     try:
         if request.method == "POST":
             suhu = float(request.form["suhu"])
@@ -81,17 +83,35 @@ def read_table():
 def read_yesterday():
     conn = connect(host = "localhost", user="root", passwd="password", db="db_sister", cursorclass=cursors.DictCursor)
     cur = conn.cursor()
-    cur.execute("SELECT * FROM sensor WHERE DATE(time) = DATE(NOW() - INTERVAL 3 DAY) order by id desc")
-    data = cur.fetchall()
-    sensor = get_data(data)
-    y_suhu, y_lembap, y_sm = mean_yesterday(sensor)
+    #ini tambahan
+    try:
+        cur.execute("SELECT * FROM sensor WHERE DATE(time) = DATE(NOW() - INTERVAL 3 DAY) order by id desc")
+        data = cur.fetchall()
+        sensor = get_data(data)
+        y_suhu, y_lembap, y_sm = mean_yesterday(sensor)
+    except:
+        y_suhu = 0
+        y_lembap = 0
+        y_sm = 0
+    #tambah end
     sensor,curr_data,bar = read_table()
-    suhu_yes=((curr_data['suhu']-y_suhu)/y_suhu)
-    suhu_yes = suhu_yes * 100
-    lembap_yes=((curr_data['lembap']-y_lembap)/y_lembap)
-    lembap_yes = lembap_yes * 100
-    sm_yes = ((curr_data['sm']-y_sm)/y_sm)
-    sm_yes = sm_yes * 100
+    #tambahan - edit
+    if y_suhu != 0:
+        suhu_yes=((curr_data['suhu']-y_suhu)/y_suhu)
+        suhu_yes = suhu_yes * 100
+    else:
+        suhu_yes = 0
+    if y_lembap != 0:
+        lembap_yes=((curr_data['lembap']-y_lembap)/y_lembap)
+        lembap_yes = lembap_yes * 100
+    else:
+        lembap_yes = 0
+    if y_sm != 0:
+        sm_yes = ((curr_data['sm']-y_sm)/y_sm)
+        sm_yes = sm_yes * 100
+    else:
+        sm_yes = 0
+    # tambah -edit end
     sign = lambda x: (1, 0)[x <= 0]
     yesterday = dict()
     yesterday['suhu'] = {'nilai':float(round(suhu_yes,2)),'sign':sign(suhu_yes)}
