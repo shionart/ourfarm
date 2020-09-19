@@ -48,7 +48,7 @@ def get_data_api():
 def insert_to_table(suhu,lembap,sm,rel):
     try:
         conn = connect(host='localhost',db='db_sister',
-                       user='root',passwd='password')
+                       user='root',passwd='')
         cursor = conn.cursor()
         query = "INSERT INTO sensor (suhu, kelembapan, soil_moist, relay) VALUES (%s, %s, %s, %s)"
 
@@ -70,7 +70,7 @@ def insert_to_table(suhu,lembap,sm,rel):
             print("MySql ditutup")
 
 def read_table():
-    conn = connect(host = "localhost", user="root", passwd="password", db="db_sister", cursorclass=cursors.DictCursor)
+    conn = connect(host = "localhost", user="root", passwd="", db="db_sister", cursorclass=cursors.DictCursor)
     cur = conn.cursor()
     cur.execute("SELECT * from sensor order by id desc")
     data = cur.fetchall()
@@ -81,7 +81,7 @@ def read_table():
 
 #@app.route('/yesterday',methods=["GET"])
 def read_yesterday():
-    conn = connect(host = "localhost", user="root", passwd="password", db="db_sister", cursorclass=cursors.DictCursor)
+    conn = connect(host = "localhost", user="root", passwd="", db="db_sister", cursorclass=cursors.DictCursor)
     cur = conn.cursor()
     #ini tambahan
     try:

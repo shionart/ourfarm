@@ -391,7 +391,7 @@
 			    dashboard(data['bar_data']['lembap'],data['bar_data']['suhu'],data['bar_data']['sm']);
 			} 
 	    	});*/
-		$.get("http://10.137.18.150:5001/get", function( data ) {
+		$.get("http://127.0.0.1:5001/get", function( data ) {
 		    setTimeout(getData,1000*10);
 		    	console.log(data['bar_data']);
 		    $('#state_lembap').html(data['curr_data']['lembap']);
@@ -407,9 +407,9 @@
 		"searching": false,
 		"paging": true, 
 		"ordering": true,
-		//"ajax":"/get",
+		//"ajax":"/get", 10.137.18.150
 		"ajax": {
-			"url": "http://10.137.18.150:5001/get",
+			"url": "http://127.0.0.1:5001/get",
 			"dataSrc": "sensor"
 		},
 		"columns": [
